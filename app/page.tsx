@@ -55,6 +55,7 @@ export default function Home() {
     [busy, setBusy] = useState(false),
     [fileName, setFileName] = useState('未导入文案');
   const picker = useRef<HTMLInputElement>(null);
+  const sessionRevision = useRef(0);
   const row = rows.find((r) => r.id === selected);
   const currentIssues = issues.filter((i) => i.id === selected);
   const accepted = Object.values(decisions).filter(
@@ -63,6 +64,7 @@ export default function Home() {
   const draft = row ? (decisions[row.id]?.text ?? row.target) : '';
   function load(text: string, name: string) {
     const next = parseCSV(text);
+    sessionRevision.current++;
     setRows(next);
     setSelected(next[0].id);
     setIssues([]);
@@ -126,6 +128,7 @@ export default function Home() {
     setMessage('已导出：仅已确认的条目使用修改后的译文。');
   }
   async function ai() {
+    const requestedRevision = sessionRevision.current;
     setBusy(true);
     setMessage('正在请求 AI 审校…');
     try {
@@ -144,6 +147,10 @@ export default function Home() {
         review?: ReviewMeta;
       };
       if (!res.ok) throw Error(data.error || 'AI 审校失败，请重试。');
+      if (requestedRevision !== sessionRevision.current) {
+        setMessage('审校内容已更改，已丢弃过期的 AI 结果。请重新运行审校。');
+        return;
+      }
       setIssues((prev) => [
         ...prev.filter((i) => i.origin !== 'AI'),
         ...data.issues,
@@ -238,7 +245,9 @@ export default function Home() {
           <Textarea
             id="context"
             value={context}
+            disabled={busy}
             onChange={(e) => {
+              sessionRevision.current++;
               setContext(e.target.value);
               setIssues([]);
               setReviewed(false);
@@ -250,7 +259,9 @@ export default function Home() {
           <Textarea
             id="glossary"
             value={glossary}
+            disabled={busy}
             onChange={(e) => {
+              sessionRevision.current++;
               setGlossary(e.target.value);
               setIssues([]);
               setReviewed(false);
@@ -390,6 +401,7 @@ export default function Home() {
                       {i.suggestion && (
                         <Button
                           variant="outline"
+                          disabled={busy}
                           onClick={() =>
                             setDecisions((d) => ({
                               ...d,
@@ -417,6 +429,7 @@ export default function Home() {
               <Textarea
                 id="draft"
                 value={draft}
+                disabled={busy}
                 onChange={(e) =>
                   setDecisions((d) => ({
                     ...d,
