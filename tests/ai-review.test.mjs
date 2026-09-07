@@ -32,6 +32,21 @@ test('invalid rows and duplicate ids are rejected', () => {
     }),
   );
 });
+test('review request ids are trimmed before duplicate validation', () => {
+  assert.equal(
+    validateReviewRequest({
+      ...request,
+      rows: [{ ...request.rows[0], id: ' save ' }],
+    }).rows[0].id,
+    'save',
+  );
+  assert.throws(() =>
+    validateReviewRequest({
+      ...request,
+      rows: [request.rows[0], { ...request.rows[0], id: ' save ' }],
+    }),
+  );
+});
 test('invalid glossary entries are rejected', () =>
   assert.throws(() =>
     validateReviewRequest({
