@@ -1,0 +1,47 @@
+{
+  "name": "localecheck-rules-dev-v1",
+  "provenance": "synthetic",
+  "split": "development",
+  "description": "用于验证规则检查与评测管线的合成开发集，不得作为真实用户效果。",
+  "glossary": [
+    {"source": "工作区", "target": "workspace"},
+    {"source": "订阅", "target": "subscription"},
+    {"source": "项目", "target": "item"}
+  ],
+  "cases": [
+    {"id":"ok-01","source":"保存","target":"Save","context":"按钮","expectedCategories":[]},
+    {"id":"ok-02","source":"保留 30 天","target":"Keep for 30 days","context":"提示","expectedCategories":[]},
+    {"id":"ok-03","source":"你好，{name}","target":"Hello, {name}","context":"欢迎语","expectedCategories":[]},
+    {"id":"ok-04","source":"已完成 1,000 个任务","target":"1,000 tasks completed","context":"统计","expectedCategories":[]},
+    {"id":"ok-05","source":"打开工作区","target":"Open workspace","context":"按钮","expectedCategories":[]},
+    {"id":"ok-06","source":"管理订阅","target":"Manage subscription","context":"菜单","expectedCategories":[]},
+    {"id":"ok-07","source":"删除 {{count}} 个文件","target":"Delete {{count}} files","context":"确认弹窗","expectedCategories":[]},
+    {"id":"ok-08","source":"上传进度 75%","target":"Upload 75% complete","context":"状态","expectedCategories":[]},
+
+    {"id":"num-01","source":"保留 30 天","target":"Keep for 3 days","context":"提示","expectedCategories":["数字"]},
+    {"id":"num-02","source":"最多 5 人","target":"Up to 6 people","context":"套餐","expectedCategories":["数字"]},
+    {"id":"num-03","source":"已完成 1,000 个任务","target":"100 tasks completed","context":"统计","expectedCategories":["数字"]},
+    {"id":"num-04","source":"上传进度 75%","target":"Upload 70% complete","context":"状态","expectedCategories":["数字"]},
+    {"id":"num-05","source":"还有 2 次机会","target":"1 attempt remaining","context":"错误提示","expectedCategories":["数字"]},
+    {"id":"num-06","source":"版本 2.5","target":"Version 2.4","context":"设置","expectedCategories":["数字"]},
+
+    {"id":"ph-01","source":"你好，{name}","target":"Hello, {user}","context":"欢迎语","expectedCategories":["占位符"]},
+    {"id":"ph-02","source":"删除 {{count}} 个文件","target":"Delete files","context":"确认弹窗","expectedCategories":["占位符"]},
+    {"id":"ph-03","source":"欢迎 %s","target":"Welcome %d","context":"欢迎语","expectedCategories":["占位符"]},
+    {"id":"ph-04","source":"共 %1$d 项","target":"%2$d items total","context":"统计","expectedCategories":["占位符"]},
+    {"id":"ph-05","source":"{first} 和 {second}","target":"{first} and {first}","context":"列表","expectedCategories":["占位符"]},
+    {"id":"ph-06","source":"你好，{{user1}}","target":"Hello, {{user2}}","context":"欢迎语","expectedCategories":["占位符"]},
+
+    {"id":"empty-01","source":"保存","target":"","context":"按钮","expectedCategories":["漏译"]},
+    {"id":"empty-02","source":"取消","target":"   ","context":"按钮","expectedCategories":["漏译"]},
+    {"id":"empty-03","source":"删除 {count} 个项目","target":"","context":"确认弹窗","expectedCategories":["漏译"]},
+    {"id":"empty-04","source":"保留 30 天","target":"","context":"提示","expectedCategories":["漏译"]},
+
+    {"id":"term-01","source":"打开工作区","target":"Open project","context":"按钮","expectedCategories":["术语"]},
+    {"id":"term-02","source":"新建工作区","target":"Create a space","context":"按钮","expectedCategories":["术语"]},
+    {"id":"term-03","source":"取消订阅","target":"Cancel plan","context":"设置","expectedCategories":["术语"]},
+    {"id":"term-04","source":"订阅已续期","target":"Plan renewed","context":"通知","expectedCategories":["术语"]},
+    {"id":"term-05","source":"删除项目","target":"Delete project","context":"按钮","expectedCategories":["术语"]},
+    {"id":"term-06","source":"移动项目","target":"Move entry","context":"菜单","expectedCategories":["术语"]}
+  ]
+}
