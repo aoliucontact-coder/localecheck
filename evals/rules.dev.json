@@ -19,6 +19,8 @@
     {"id":"ok-08","source":"上传进度 75%","target":"Upload 75% complete","context":"状态","expectedCategories":[]},
     {"id":"ok-09","source":"最低温度 −5°C","target":"Minimum temperature: -5°C","context":"天气设置","expectedCategories":[]},
     {"id":"ok-10","source":"上传进度 ７５％","target":"Upload 75% complete","context":"状态","expectedCategories":[]},
+    {"id":"ok-11","source":"价格：%1$0.2f","target":"Price: %1$0.2f","context":"价格标签","expectedCategories":[]},
+    {"id":"ok-12","source":"由 100% 安全连接保护","target":"Protected by a 100% secure connection","context":"安全提示","expectedCategories":[]},
 
     {"id":"num-01","source":"保留 30 天","target":"Keep for 3 days","context":"提示","expectedCategories":["数字"]},
     {"id":"num-02","source":"最多 5 人","target":"Up to 6 people","context":"套餐","expectedCategories":["数字"]},
@@ -35,6 +37,8 @@
     {"id":"ph-04","source":"共 %1$d 项","target":"%2$d items total","context":"统计","expectedCategories":["占位符"]},
     {"id":"ph-05","source":"{first} 和 {second}","target":"{first} and {first}","context":"列表","expectedCategories":["占位符"]},
     {"id":"ph-06","source":"你好，{{user1}}","target":"Hello, {{user2}}","context":"欢迎语","expectedCategories":["占位符"]},
+    {"id":"ph-07","source":"你好，%@","target":"Hello, %s","context":"iOS 欢迎语","expectedCategories":["占位符"]},
+    {"id":"ph-08","source":"价格：%1$0.2f","target":"Price: %2$0.2f","context":"价格标签","expectedCategories":["占位符"]},
 
     {"id":"empty-01","source":"保存","target":"","context":"按钮","expectedCategories":["漏译"]},
     {"id":"empty-02","source":"取消","target":"   ","context":"按钮","expectedCategories":["漏译"]},

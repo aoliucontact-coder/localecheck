@@ -97,6 +97,31 @@ test('placeholder digits excluded from number checks', () =>
       .length,
     1,
   ));
+test('iOS and formatted printf placeholders are compared', () => {
+  assert.equal(
+    reviewRows([{ id: '1', source: '你好，%@', target: 'Hello, %@' }], [])
+      .length,
+    0,
+  );
+  assert.equal(
+    reviewRows(
+      [{ id: '1', source: '价格：%1$0.2f', target: 'Price: %1$0.2f' }],
+      [],
+    ).length,
+    0,
+  );
+  assert.equal(
+    reviewRows([{ id: '1', source: '你好，%@', target: 'Hello, %s' }], [])[0]
+      .category,
+    '占位符',
+  );
+});
+test('literal percent text is not treated as a printf placeholder', () =>
+  assert.equal(
+    reviewRows([{ id: '1', source: '100% 安全', target: '100% safe' }], [])
+      .length,
+    0,
+  ));
 test('term boundary', () => {
   const g = [{ source: '工作区', target: 'workspace' }];
   assert.equal(
