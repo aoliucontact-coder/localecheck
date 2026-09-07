@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {parseCSV,exportCSV,reviewRows,finalRows} from '../lib/review.mjs';
+test('quoted CSV round trip',()=>{const r=parseCSV('\ufeffid,source,target,context\r\n1,"你好,世界","Hello ""world""","a\nb"\r\n');assert.equal(r[0].target,'Hello "world"');assert.deepEqual(parseCSV(exportCSV(r)),r)});
+test('invalid CSV and duplicate IDs',()=>{for(const s of ['id,source,target\n1,a,"bad','id,source,target\n1,a,b\n1,c,d','id,source,target\n,a,b','id,source,target\n1,a,b,x','id,source,target\n1,a,b"c'])assert.throws(()=>parseCSV(s))});
+test('100 row limit',()=>assert.throws(()=>parseCSV('id,source,target\n'+Array.from({length:101},(_,i)=>`${i},a,b`).join('\n'))));
+test('normalized and repeated numbers',()=>{assert.equal(reviewRows([{id:'1',source:'1,000个',target:'1000 items'}],[]).length,0);assert.equal(reviewRows([{id:'1',source:'30天',target:'3 days'}],[])[0].category,'数字');assert.ok(reviewRows([{id:'1',source:'2和2',target:'2'}],[]).length)});
+test('placeholder digits excluded from number checks',()=>assert.equal(reviewRows([{id:'1',source:'你好 {user1}',target:'Hi {user2}'}],[]).length,1));
+test('term boundary',()=>{const g=[{source:'工作区',target:'workspace'}];assert.equal(reviewRows([{id:'1',source:'工作区',target:'workspaces'}],g).length,1);assert.equal(reviewRows([{id:'1',source:'工作区',target:'Workspace'}],g).length,0)});
+test('only accepted edits change target',()=>{const r=[{id:'1',source:'a',target:'old',context:''}];assert.equal(finalRows(r,{'1':{status:'accepted',text:'new'}})[0].target,'new');assert.equal(finalRows(r,{'1':{status:'rejected',text:'bad'}})[0].target,'old')});
+test('safe spreadsheet export',()=>assert.ok(exportCSV([{id:'1',source:'=1+1',target:'x',context:''}],true).includes("'=1+1")));

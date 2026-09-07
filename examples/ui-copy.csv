@@ -1,0 +1,11 @@
+id,source,target,context
+trial_cta,免费试用,Start free trial,按钮：进入试用流程
+cancel_subscription,取消订阅,Delete account,设置页：停止下个周期续费
+retention,文件保留30天,Files are kept for 3 days,上传成功提示
+welcome,欢迎回来 {name},Welcome back {username},登录后欢迎语；占位符必须一致
+save,保存,Save,保存设置按钮
+delete_warning,删除后无法恢复,You can restore this after deletion,永久删除确认弹窗
+workspace,创建工作区,Create a workplace,术语规范：工作区 = workspace
+enable,立即开通,Open now,缺少信息：不清楚是启用功能还是购买订阅
+retry,请稍后重试,Please try again later,暂时性网络错误
+empty,暂无通知,,通知列表空状态
