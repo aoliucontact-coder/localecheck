@@ -1,5 +1,5 @@
 export type Row={id:string;source:string;target:string;context:string};
-export type Issue={id:string;category:string;reason:string;origin:string;suggestion:string};
+export type Issue={id:string;category:string;reason:string;origin:string;suggestion:string;severity?:'高'|'中'|'低';evidence?:string;needsContext?:boolean;model?:string;promptVersion?:string};
 export type Decision={status:'accepted'|'rejected'|'pending';text:string};
 export function parseCSV(input:string):Row[];
 export function exportCSV(rows:Row[],safe?:boolean):string;
