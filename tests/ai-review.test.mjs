@@ -79,6 +79,15 @@ test('bounded response reader rejects declared and streamed oversize responses',
     /too large/,
   );
 });
+test('bounded response reader rejects malformed UTF-8', async () => {
+  const body = new ReadableStream({
+    start(controller) {
+      controller.enqueue(Uint8Array.from([0xc3, 0x28]));
+      controller.close();
+    },
+  });
+  await assert.rejects(readBoundedText(new Response(body)));
+});
 test('prompt identifies version and treats input as data', () => {
   const messages = buildReviewMessages(request);
   assert.match(
