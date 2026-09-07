@@ -11,7 +11,8 @@
     "start": "wrangler dev --config dist/server/wrangler.json",
     "lint": "oxlint",
     "typecheck": "tsc --noEmit",
-    "format": "oxfmt",
+    "format": "oxfmt app/page.tsx app/api/review/route.ts lib/review.mjs lib/ai-review.mjs lib/evaluation.mjs lib/use-review-tools.ts tests/review.test.mjs tests/ai-review.test.mjs tests/evaluation.test.mjs scripts/evaluate-rules.mjs",
+    "format:check": "pnpm format --check",
     "eval:rules": "node scripts/evaluate-rules.mjs",
     "test": "node --test tests/*.test.mjs"
   },
