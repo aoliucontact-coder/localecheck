@@ -30,6 +30,13 @@ test('invalid CSV and duplicate IDs', () => {
   ])
     assert.throws(() => parseCSV(s));
 });
+test('CSV ids are trimmed before duplicate validation', () => {
+  assert.equal(parseCSV('id,source,target\n  item-1  ,a,b')[0].id, 'item-1');
+  assert.throws(
+    () => parseCSV('id,source,target\nitem-1,a,b\n item-1 ,c,d'),
+    /id 为空或重复/,
+  );
+});
 test('100 row limit', () =>
   assert.throws(() =>
     parseCSV(
