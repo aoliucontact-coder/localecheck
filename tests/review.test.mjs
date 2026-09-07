@@ -8,6 +8,7 @@ test('normalized and repeated numbers',()=>{assert.equal(reviewRows([{id:'1',sou
 test('placeholder digits excluded from number checks',()=>assert.equal(reviewRows([{id:'1',source:'你好 {user1}',target:'Hi {user2}'}],[]).length,1));
 test('term boundary',()=>{const g=[{source:'工作区',target:'workspace'}];assert.equal(reviewRows([{id:'1',source:'工作区',target:'workspaces'}],g).length,1);assert.equal(reviewRows([{id:'1',source:'工作区',target:'Workspace'}],g).length,0)});
 test('only accepted edits change target',()=>{const r=[{id:'1',source:'a',target:'old',context:''}];assert.equal(finalRows(r,{'1':{status:'accepted',text:'new'}})[0].target,'new');assert.equal(finalRows(r,{'1':{status:'rejected',text:'bad'}})[0].target,'old')});
+test('needs-context decisions preserve original target',()=>{const r=[{id:'1',source:'a',target:'old',context:''}];assert.equal(finalRows(r,{'1':{status:'needs-context',text:'draft'}})[0].target,'old')});
 test('safe spreadsheet export',()=>assert.ok(exportCSV([{id:'1',source:'=1+1',target:'x',context:''}],true).includes("'=1+1")));
 test('rule findings include severity, evidence and provenance',()=>{
  const [issue]=reviewRows([{id:'1',source:'保留 30 天',target:'Keep for 3 days',context:''}],[]);
