@@ -41,6 +41,7 @@ export async function POST(request: Request) {
     const startedAt = Date.now();
     const response = await fetch(upstream, {
       method: 'POST',
+      redirect: 'error',
       signal: AbortSignal.timeout(45000),
       headers: {
         Authorization: `Bearer ${config.LLM_API_KEY}`,
