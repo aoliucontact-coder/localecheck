@@ -1,6 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {parseCSV,exportCSV,reviewRows,finalRows} from '../lib/review.mjs';
+import {decodeUTF8,parseCSV,exportCSV,reviewRows,finalRows} from '../lib/review.mjs';
+test('strict UTF-8 decoding accepts valid text and rejects malformed bytes',()=>{
+ assert.equal(decodeUTF8(new TextEncoder().encode('中文')), '中文');
+ assert.throws(()=>decodeUTF8(Uint8Array.from([0xc3,0x28])),/UTF-8/);
+});
+test('strict UTF-8 decoding applies the byte limit before decoding',()=>assert.throws(()=>decodeUTF8(new Uint8Array(1_000_001)),/1 MB/));
 test('quoted CSV round trip',()=>{const r=parseCSV('\ufeffid,source,target,context\r\n1,"你好,世界","Hello ""world""","a\nb"\r\n');assert.equal(r[0].target,'Hello "world"');assert.deepEqual(parseCSV(exportCSV(r)),r)});
 test('invalid CSV and duplicate IDs',()=>{for(const s of ['id,source,target\n1,a,"bad','id,source,target\n1,a,b\n1,c,d','id,source,target\n,a,b','id,source,target\n1,a,b,x','id,source,target\n1,a,b"c'])assert.throws(()=>parseCSV(s))});
 test('100 row limit',()=>assert.throws(()=>parseCSV('id,source,target\n'+Array.from({length:101},(_,i)=>`${i},a,b`).join('\n'))));
