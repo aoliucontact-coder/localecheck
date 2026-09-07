@@ -353,7 +353,7 @@ export default function Home() {
                               : issues.filter((i) => i.id === r.id).length
                                 ? `${issues.filter((i) => i.id === r.id).length} 项问题`
                                 : reviewed
-                                  ? '未发现规则问题'
+                                  ? '未发现待核对问题'
                                   : '待检查'}
                       </span>
                     </TableCell>
@@ -420,7 +420,7 @@ export default function Home() {
                 ) : (
                   <p className="note">
                     {reviewed
-                      ? '未发现规则问题不代表译文准确，请继续核对语义和语气。'
+                      ? '未发现自动检查问题不代表译文准确，请继续核对语义和语气。'
                       : '运行检查后，在这里查看问题依据。'}
                   </p>
                 )}
