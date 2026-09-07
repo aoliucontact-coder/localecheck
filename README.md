@@ -76,3 +76,4 @@ LLM_API_KEY=
 - [项目背景与当前共识](docs/PROJECT_BACKGROUND.md)
 - [产品发展路线图](docs/ROADMAP.md)
 - [第一周工程基线记录](docs/WEEK1-ENGINEERING-BASELINE.md)
+- [用户研究执行目录](docs/research/README.md)
