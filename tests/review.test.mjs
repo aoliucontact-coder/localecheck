@@ -9,3 +9,21 @@ test('placeholder digits excluded from number checks',()=>assert.equal(reviewRow
 test('term boundary',()=>{const g=[{source:'工作区',target:'workspace'}];assert.equal(reviewRows([{id:'1',source:'工作区',target:'workspaces'}],g).length,1);assert.equal(reviewRows([{id:'1',source:'工作区',target:'Workspace'}],g).length,0)});
 test('only accepted edits change target',()=>{const r=[{id:'1',source:'a',target:'old',context:''}];assert.equal(finalRows(r,{'1':{status:'accepted',text:'new'}})[0].target,'new');assert.equal(finalRows(r,{'1':{status:'rejected',text:'bad'}})[0].target,'old')});
 test('safe spreadsheet export',()=>assert.ok(exportCSV([{id:'1',source:'=1+1',target:'x',context:''}],true).includes("'=1+1")));
+test('rule findings include severity, evidence and provenance',()=>{
+ const [issue]=reviewRows([{id:'1',source:'保留 30 天',target:'Keep for 3 days',context:''}],[]);
+ assert.equal(issue.severity,'高');
+ assert.match(issue.evidence,/30/);
+ assert.equal(issue.origin,'规则');
+ assert.equal(issue.needsContext,false);
+});
+test('missing translations are high risk and stop duplicate findings',()=>{
+ const issues=reviewRows([{id:'1',source:'删除 {count} 个项目',target:'',context:''}],[{source:'项目',target:'item'}]);
+ assert.equal(issues.length,1);
+ assert.equal(issues[0].category,'漏译');
+ assert.equal(issues[0].severity,'高');
+});
+test('glossary findings include configured term evidence',()=>{
+ const [issue]=reviewRows([{id:'1',source:'打开工作区',target:'Open the project',context:''}],[{source:'工作区',target:'workspace'}]);
+ assert.equal(issue.severity,'中');
+ assert.match(issue.evidence,/workspace/);
+});
