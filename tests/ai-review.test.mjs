@@ -142,6 +142,22 @@ test('unknown ids, categories and inconsistent context responses are rejected', 
       { model: 'test' },
     ),
   );
+  assert.throws(() =>
+    parseReviewResponse(
+      JSON.stringify({
+        issues: [
+          {
+            ...base,
+            category: '语境不足',
+            needsContext: false,
+            suggestion: '',
+          },
+        ],
+      }),
+      new Set(['save']),
+      { model: 'test' },
+    ),
+  );
 });
 test('model content limit counts UTF-8 bytes', () =>
   assert.throws(() =>
