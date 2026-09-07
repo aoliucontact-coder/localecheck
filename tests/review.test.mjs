@@ -54,6 +54,24 @@ test('normalized and repeated numbers', () => {
   );
   assert.ok(reviewRows([{ id: '1', source: '2和2', target: '2' }], []).length);
 });
+test('ASCII, Unicode and full-width number signs are compared', () => {
+  assert.equal(
+    reviewRows([{ id: '1', source: '−5°C', target: '-5°C' }], []).length,
+    0,
+  );
+  assert.equal(
+    reviewRows([{ id: '1', source: '＋5', target: '+5' }], []).length,
+    0,
+  );
+  assert.equal(
+    reviewRows([{ id: '1', source: '−5°C', target: '5°C' }], [])[0].category,
+    '数字',
+  );
+  assert.equal(
+    reviewRows([{ id: '1', source: '+5', target: '-5' }], [])[0].category,
+    '数字',
+  );
+});
 test('placeholder digits excluded from number checks', () =>
   assert.equal(
     reviewRows([{ id: '1', source: '你好 {user1}', target: 'Hi {user2}' }], [])

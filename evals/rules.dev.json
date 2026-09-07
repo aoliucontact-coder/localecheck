@@ -17,6 +17,7 @@
     {"id":"ok-06","source":"管理订阅","target":"Manage subscription","context":"菜单","expectedCategories":[]},
     {"id":"ok-07","source":"删除 {{count}} 个文件","target":"Delete {{count}} files","context":"确认弹窗","expectedCategories":[]},
     {"id":"ok-08","source":"上传进度 75%","target":"Upload 75% complete","context":"状态","expectedCategories":[]},
+    {"id":"ok-09","source":"最低温度 −5°C","target":"Minimum temperature: -5°C","context":"天气设置","expectedCategories":[]},
 
     {"id":"num-01","source":"保留 30 天","target":"Keep for 3 days","context":"提示","expectedCategories":["数字"]},
     {"id":"num-02","source":"最多 5 人","target":"Up to 6 people","context":"套餐","expectedCategories":["数字"]},
@@ -24,6 +25,7 @@
     {"id":"num-04","source":"上传进度 75%","target":"Upload 70% complete","context":"状态","expectedCategories":["数字"]},
     {"id":"num-05","source":"还有 2 次机会","target":"1 attempt remaining","context":"错误提示","expectedCategories":["数字"]},
     {"id":"num-06","source":"版本 2.5","target":"Version 2.4","context":"设置","expectedCategories":["数字"]},
+    {"id":"num-07","source":"最低温度 −5°C","target":"Minimum temperature: 5°C","context":"天气设置","expectedCategories":["数字"]},
 
     {"id":"ph-01","source":"你好，{name}","target":"Hello, {user}","context":"欢迎语","expectedCategories":["占位符"]},
     {"id":"ph-02","source":"删除 {{count}} 个文件","target":"Delete files","context":"确认弹窗","expectedCategories":["占位符"]},
