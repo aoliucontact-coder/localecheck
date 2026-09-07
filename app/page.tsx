@@ -30,6 +30,17 @@ import {
   type Issue,
   type Decision,
 } from '@/lib/review.mjs';
+type ReviewMeta = {
+  model: string;
+  promptVersion: string;
+  durationMs: number;
+  issueCount: number;
+  usage: {
+    inputTokens: number;
+    outputTokens: number;
+    totalTokens: number;
+  } | null;
+};
 export default function Home() {
   const [rows, setRows] = useState<Row[]>([]),
     [issues, setIssues] = useState<Issue[]>([]),
@@ -127,14 +138,23 @@ export default function Home() {
           glossary: parseGlossary(glossary),
         }),
       });
-      const data = (await res.json()) as { error?: string; issues: Issue[] };
+      const data = (await res.json()) as {
+        error?: string;
+        issues: Issue[];
+        review?: ReviewMeta;
+      };
       if (!res.ok) throw Error(data.error || 'AI 审校失败，请重试。');
       setIssues((prev) => [
         ...prev.filter((i) => i.origin !== 'AI'),
         ...data.issues,
       ]);
       setReviewed(true);
-      setMessage('AI 审校完成。建议仅供核对，需逐条确认。');
+      const meta = data.review;
+      setMessage(
+        meta
+          ? `AI 审校完成：${meta.model}，Prompt ${meta.promptVersion}，${(meta.durationMs / 1000).toFixed(1)} 秒${meta.usage ? `，${meta.usage.totalTokens} tokens` : ''}。建议仅供核对，需逐条确认。`
+          : 'AI 审校完成。建议仅供核对，需逐条确认。',
+      );
     } catch (e) {
       setMessage((e as Error).message);
     } finally {

@@ -4,6 +4,7 @@ import {
   PROMPT_VERSION,
   buildReviewMessages,
   parseReviewResponse,
+  parseProviderUsage,
   readBoundedText,
   validateReviewRequest,
 } from '../lib/ai-review.mjs';
@@ -133,3 +134,33 @@ test('model content limit counts UTF-8 bytes', () =>
       model: 'test',
     }),
   ));
+test('provider token usage is normalized across compatible field names', () => {
+  assert.deepEqual(
+    parseProviderUsage({
+      prompt_tokens: 10,
+      completion_tokens: 4,
+      total_tokens: 14,
+    }),
+    { inputTokens: 10, outputTokens: 4, totalTokens: 14 },
+  );
+  assert.deepEqual(parseProviderUsage({ input_tokens: 3, output_tokens: 2 }), {
+    inputTokens: 3,
+    outputTokens: 2,
+    totalTokens: 5,
+  });
+});
+test('missing or inconsistent provider usage is ignored', () => {
+  assert.equal(parseProviderUsage(undefined), null);
+  assert.equal(
+    parseProviderUsage({
+      prompt_tokens: 10,
+      completion_tokens: 4,
+      total_tokens: 2,
+    }),
+    null,
+  );
+  assert.equal(
+    parseProviderUsage({ prompt_tokens: -1, completion_tokens: 4 }),
+    null,
+  );
+});

@@ -1,7 +1,9 @@
 import { env } from 'cloudflare:workers';
 import {
+  PROMPT_VERSION,
   buildReviewMessages,
   parseReviewResponse,
+  parseProviderUsage,
   readBoundedText,
   validateReviewRequest,
 } from '@/lib/ai-review.mjs';
@@ -36,6 +38,7 @@ export async function POST(request: Request) {
         { error: '模型服务配置需使用 HTTPS。' },
         { status: 503 },
       );
+    const startedAt = Date.now();
     const response = await fetch(upstream, {
       method: 'POST',
       signal: AbortSignal.timeout(45000),
@@ -55,11 +58,22 @@ export async function POST(request: Request) {
       );
     const result = JSON.parse(await readBoundedText(response)) as {
       choices?: { message?: { content?: string } }[];
+      usage?: unknown;
     };
     const content = result.choices?.[0]?.message?.content || '';
     const ids = new Set(data.rows.map((r) => r.id));
+    const issues = parseReviewResponse(content, ids, {
+      model: config.LLM_MODEL,
+    });
     return Response.json({
-      issues: parseReviewResponse(content, ids, { model: config.LLM_MODEL }),
+      issues,
+      review: {
+        model: config.LLM_MODEL,
+        promptVersion: PROMPT_VERSION,
+        durationMs: Date.now() - startedAt,
+        issueCount: issues.length,
+        usage: parseProviderUsage(result.usage),
+      },
     });
   } catch {
     return Response.json(
