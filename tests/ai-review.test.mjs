@@ -4,6 +4,7 @@ import {
   PROMPT_VERSION,
   buildReviewMessages,
   parseReviewResponse,
+  readBoundedText,
   validateReviewRequest,
 } from '../lib/ai-review.mjs';
 
@@ -37,6 +38,31 @@ test('invalid glossary entries are rejected', () =>
       glossary: [{ source: '工作区', target: '' }],
     }),
   ));
+test('duplicate glossary sources are rejected after trimming', () =>
+  assert.throws(() =>
+    validateReviewRequest({
+      ...request,
+      glossary: [
+        { source: '工作区', target: 'workspace' },
+        { source: ' 工作区 ', target: 'space' },
+      ],
+    }),
+  ));
+test('bounded response reader accepts small UTF-8 responses', async () =>
+  assert.equal(await readBoundedText(new Response('中文'), 6), '中文'));
+test('bounded response reader rejects declared and streamed oversize responses', async () => {
+  await assert.rejects(
+    readBoundedText(
+      new Response('small', { headers: { 'content-length': '11' } }),
+      10,
+    ),
+    /too large/,
+  );
+  await assert.rejects(
+    readBoundedText(new Response('中'.repeat(4)), 10),
+    /too large/,
+  );
+});
 test('prompt identifies version and treats input as data', () => {
   const messages = buildReviewMessages(request);
   assert.match(
@@ -101,3 +127,9 @@ test('unknown ids, categories and inconsistent context responses are rejected', 
     ),
   );
 });
+test('model content limit counts UTF-8 bytes', () =>
+  assert.throws(() =>
+    parseReviewResponse('中'.repeat(400000), new Set(['save']), {
+      model: 'test',
+    }),
+  ));

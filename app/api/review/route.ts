@@ -2,6 +2,7 @@ import { env } from 'cloudflare:workers';
 import {
   buildReviewMessages,
   parseReviewResponse,
+  readBoundedText,
   validateReviewRequest,
 } from '@/lib/ai-review.mjs';
 export async function POST(request: Request) {
@@ -52,7 +53,7 @@ export async function POST(request: Request) {
         { error: '模型服务暂时不可用，请稍后重试。当前文案与确认记录已保留。' },
         { status: 502 },
       );
-    const result = (await response.json()) as {
+    const result = JSON.parse(await readBoundedText(response)) as {
       choices?: { message?: { content?: string } }[];
     };
     const content = result.choices?.[0]?.message?.content || '';
