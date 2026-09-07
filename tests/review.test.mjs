@@ -72,6 +72,25 @@ test('ASCII, Unicode and full-width number signs are compared', () => {
     '数字',
   );
 });
+test('full-width numeric forms are normalized without hiding value changes', () => {
+  assert.equal(
+    reviewRows([{ id: '1', source: '进度 ７５％', target: 'Progress 75%' }], [])
+      .length,
+    0,
+  );
+  assert.equal(
+    reviewRows([{ id: '1', source: '版本 ２．５', target: 'Version 2.5' }], [])
+      .length,
+    0,
+  );
+  assert.equal(
+    reviewRows(
+      [{ id: '1', source: '进度 ７５％', target: 'Progress 70%' }],
+      [],
+    )[0].category,
+    '数字',
+  );
+});
 test('placeholder digits excluded from number checks', () =>
   assert.equal(
     reviewRows([{ id: '1', source: '你好 {user1}', target: 'Hi {user2}' }], [])
