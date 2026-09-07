@@ -122,6 +122,38 @@ test('literal percent text is not treated as a printf placeholder', () =>
       .length,
     0,
   ));
+test('escaped percent placeholders are compared', () => {
+  assert.equal(
+    reviewRows(
+      [{ id: '1', source: '进度：%d%%', target: 'Progress: %d%%' }],
+      [],
+    ).length,
+    0,
+  );
+  assert.equal(
+    reviewRows(
+      [{ id: '1', source: '进度：%d%%', target: 'Progress: %d%' }],
+      [],
+    )[0].category,
+    '占位符',
+  );
+});
+test('Python named placeholders are compared', () => {
+  assert.equal(
+    reviewRows(
+      [{ id: '1', source: '你好，%(user)s', target: 'Hello, %(user)s' }],
+      [],
+    ).length,
+    0,
+  );
+  assert.equal(
+    reviewRows(
+      [{ id: '1', source: '你好，%(user)s', target: 'Hello, %(name)s' }],
+      [],
+    )[0].category,
+    '占位符',
+  );
+});
 test('term boundary', () => {
   const g = [{ source: '工作区', target: 'workspace' }];
   assert.equal(
