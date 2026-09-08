@@ -32,12 +32,14 @@ pnpm dev
 
 ```bash
 pnpm test
+pnpm eval:rules
 pnpm typecheck
 pnpm lint
+pnpm format:check
 pnpm build
 ```
 
-以上命令分别运行核心逻辑测试、TypeScript 类型检查、静态检查和生产构建。功能或依赖发生变化后，应重新运行全部四项检查。
+以上命令分别运行核心逻辑测试、合成规则开发集评测、TypeScript 类型检查、静态检查、格式检查和生产构建。功能或依赖发生变化后，应重新运行全部六项检查。
 
 ## CSV 格式
 
